@@ -5,7 +5,7 @@ DEBUG = True
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
 
-FULL_DOMAIN_NAME = 'https://ikedumancas-doit.herokuapp.com'
+FULL_DOMAIN_NAME = 'https://ikequizgen.herokuapp.com'
 
 
 # Parse database configuration from $DATABASE_URL
