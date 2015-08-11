@@ -1,0 +1,26 @@
+.clearfix {
+  overflow: auto;
+  zoom: 1;
+}
+footer a {
+	color: #F5F5F5 !important;
+	text-decoration: underline;
+}
+#main_content {
+	min-height: 600px;
+}
+.material-icons.tiny {
+	font-size: 1rem;
+}
+.material-icons.small {
+	font-size: 2rem;
+}
+.material-icons.medium {
+	font-size: 4rem;
+}
+.material-icons.large {
+	font-size: 6rem;
+}
+.quiz-card .card-action {
+	padding-bottom: 40px;
+}

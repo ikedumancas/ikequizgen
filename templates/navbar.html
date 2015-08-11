@@ -1,0 +1,22 @@
+<nav>
+	<div class="nav-wrapper container">
+		<a href="#!" class="brand-logo">ikeQuizGen</a>
+		<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+		<ul class="right hide-on-med-and-down">
+			{% if request.user.is_authenticated %}
+			<li><a href="{% url 'quizzes:dashboard' %}" title="Dashboard"><i class="material-icons">dashboard</i></a></li>
+			<li><a href="#" title="Logout"><i class="material-icons">exit_to_app</i></a></li>
+			{% else %}
+			<li><a href="#">Login</a></li>
+			{% endif %}
+		</ul>
+		<ul class="side-nav" id="mobile-demo">
+			{% if request.user.is_authenticated %}
+			<li><a href="#" title="Logout"><span class="tiny material-icons">dashboard</span> Dashboard</a></li>
+			<li><a href="#" title="Logout"><span class="tiny material-icons">exit_to_app</span> Logout</a></li>
+			{% else %}
+			<li><a href="#">Login</a></li>
+			{% endif %}
+		</ul>
+	</div>
+</nav>
