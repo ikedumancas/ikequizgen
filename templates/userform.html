@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load materializecss %}
+
+{% block content %}
+<div class="section">
+<div class="row">
+	<div class="col s12 m8 offset-m2">
+		<div class="row center">
+			<img class="responsive-img circle user" src="" width="200px" alt="Gravatar Image">
+			<p><p class="help-text"><a href="http://gravatar.com/" target="_blank">Gravatar</a> Image</p></p>
+		</div>
+		<div class="row">
+			<div class="col s12 m6">{{form.first_name|materializecss}}</div>
+			<div class="col s12 m6">{{form.first_name|materializecss}}</div>
+		</div>
+		<div class="row">
+			<div class="col s12">{{form.email|materializecss}}</div></div>
+	</div>
+</div>
+
+</div>
+{% endblock %}

@@ -1,18 +1,129 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% load materializecss %}
 
+<style>{% block extrastyle %}
+body {counter-reset: section;}
+.question-number strong:before {
+  counter-increment: section;
+  content: counter(section) ". ";
+}
+.question-number {float:left;width:18px;}
+.question-content {margin-left:20px;}
+.question-choice label {width:100%;}
+#add_question_btn li a {padding: .5rem 1rem;}
+#add_question_btn li a span {margin-left: 3.5rem;position: absolute;float: left;left: 0}
+{% endblock %}</style>
+
 {% block content %}
-<h1>{{quiz.title}}</h1>
-<div class="row">
-	<div class="col m4">
-		<div class="card-panel clearfix">
-		<h4><i class="material-icons">info_outline</i> Quiz Info</h4>
-		<form action="" method="POST"> {% csrf_token %}
-		{{ form|materializecss }}
-		<div class="row"></div>
-		<button class="waves-effect waves-light btn" type="submit">Save</button>
-		</form>
+<div class="section">
+	<div class="row">
+		<div class="col m4">
+			<a class='dropdown-button btn' href='#' data-activates='add_question_btn'><i class="material-icons left">add</i>add question</a>
+			<ul id='add_question_btn' class='dropdown-content'>
+				<li><a href="#create_fb" class="modal-trigger"><i class="material-icons">remove</i><span>Fill in the blank</span></a></li>
+				<li><a href="#create_tf" class="modal-trigger"><i class="material-icons tiny">check</i><i class="material-icons tiny">close</i><span>True or False</a></span></li>
+				<li><a href="#create_mc" class="modal-trigger"><i class="material-icons">radio_button_checked</i><span>Multiple Choice</a></span></li>
+			</ul>
+			<div class="card-panel clearfix">
+			<h5><i class="material-icons">info_outline</i> Quiz Info</h5>
+			<form action="" method="POST"> {% csrf_token %}
+			{{ form|materializecss }}
+			<div class="row"></div>
+			<button class="waves-effect waves-light btn" type="submit">Save</button>
+			</form>
+			</div>
 		</div>
+		<form action="">
+		<div class="col m8 question-container">
+			{% for question in quiz.question_set.all %}
+			<div class="card-panel clearfix hoverable question" data-id="{{question.id}}">
+				<p class="question-number"><strong></strong></p>
+				<p class="question-content"><strong>{{question.question_text}}</strong></p>
+				{% if question.question_type == "fb" %}
+				<p class="question-content">
+					<label for="choice-{{question.id}}{{forloop.counter}}">Answer</label>
+					<textarea name="question[{{question.id}}]" id="choice-{{question.id}}{{forloop.counter}}" class="materialize-textarea" disabled="disabled">{{question.answer_text}}</textarea>
+				</p>
+				{% else %}
+				<p class="question-content">
+					{% for choice in question.get_choices %}
+						{% if choice == question.answer_text %}
+							<p class="question-choice">
+								<input name="question[{{question.id}}]" type="radio" id="choice-{{question.id}}{{forloop.counter}}" disabled="disabled" checked />
+								<label for="choice-{{question.id}}{{forloop.counter}}">{{choice}}</label>
+							</p>
+						{% else %}
+							<p class="question-choice">
+								<input name="question[{{question.id}}]" type="radio" id="choice-{{question.id}}{{forloop.counter}}" disabled="disabled" />
+								<label for="choice-{{question.id}}{{forloop.counter}}">{{choice}}</label>
+							</p>
+						{% endif %}
+					{% endfor %}
+				</p>
+				{% endif %}
+				
+			</div>
+			{% endfor %}
+		</div>
+		</form>
+	</div>
+</div>
+
+<div id="create_mc" class="modal">
+	<div class="modal-content">
+		<p>Multiple Choice</p>
+	</div>
+	<div class="modal-footer">
+		<button type="submit" class=" modal-action waves-effect waves-green btn-flat">Save</button>
+	</div>
+</div>
+<div id="create_tf" class="modal">
+	<div class="modal-content">
+		<p>True or False</p>
+	</div>
+	<div class="modal-footer">
+		<button type="submit" class=" modal-action waves-effect waves-green btn-flat">Save</button>
+	</div>
+</div>
+<div id="create_fb" class="modal">
+	<div class="modal-content">
+		<p></p>
+	</div>
+	<div class="modal-footer">
+		<button type="submit" class=" modal-action waves-effect waves-green btn-flat">Save</button>
 	</div>
 </div>
 {% endblock %}
+
+{% block extrascriptfile %}
+<script type="text/javascript" src="{% static 'plugins/jquery/jquery-ui.min.js' %}"></script>
+{% endblock %}
+<script>
+{% block extrascript %}
+function ReorderListTask(slug,new_order){
+	$.ajax({
+		url: getCookie('reorder_url').split('"')[1],
+		type: 'POST',
+		data: { task_slug: slug, order:new_order  },
+		success: function(json) {
+			console.log('List Reordered');
+		},
+		error: function(xhr,errmsg,err) {
+			alert("Something went wrong!")
+			console.log(errmsg)
+			console.log(xhr.responseText);
+			$('body').html("<pre>" + xhr.responseText + "</pre>");
+		}
+	});
+}
+$('.question-container').sortable({
+	update: function(event, ui) {
+		var id = $(ui.item).data('id')
+		var new_order = ui.item.index() + 1;
+		console.log(id,new_order);
+		// ReorderListTask(slug,new_order)
+	}
+}).disableSelection();
+{% endblock %}	
+</script>

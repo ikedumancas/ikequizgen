@@ -8,10 +8,23 @@
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link type="text/css" rel="stylesheet" href="{% static 'plugins/materialize/css/materialize.min.css' %}"  media="screen,projection"/>
 	<link type="text/css" rel="stylesheet" href="{% static 'css/base.css' %}"/>
-	<style>{% block extrastyle %}{% endblock %}</style>
+	{% block extrastylesheet %}{% endblock %}
+	<style>
+	.user-icon{width: 27px;position: relative;top: 8px;border-radius: 3px;}
+	#user_action {min-width: 180px;}
+	#user_action li>a {font-size: 1.1rem; padding: 0.5rem 1rem;}
+	{% block extrastyle %}{% endblock %}</style>
 </head>
 <body>
 	{% include 'navbar.html' %}
+	{% if messages %}
+		{% for message in messages %}
+		<div class="alert alert-{{message.tags}} alert-dismissible text-center" role="alert">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			{{ message|safe|urlize }}
+		</div>
+		{% endfor %}
+	{% endif %}
 	<div class="container" id="main_content">
 		{% block content %}{% endblock %}
 	</div>
@@ -19,11 +32,17 @@
 	<!--Import jQuery before materialize.js-->
 	<script type="text/javascript" src="{% static 'plugins/jquery/jquery-2.1.1.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'plugins/materialize/js/materialize.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/md5.min.js' %}"></script>
+	{% block extrascriptfile %}{% endblock %}
 	<script>
 	$(document).ready(function(){
 		$(".button-collapse").sideNav();
 		$('.modal-trigger').leanModal();
-		{% block extrascript %}{% endblock %} 
+
+		// Gravatar
+		email_hash = md5("{{user.email}}");
+		$('img.user').attr('src', 'https://www.gravatar.com/avatar/'+email_hash+"?s=200");
+		{% block extrascript %}{% endblock %}
 	});
 	</script>
 </body>

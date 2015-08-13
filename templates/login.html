@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load materializecss %}
+
+{% block content %}
+<div class="section">
+	<div class="row">
+		<div class="col sm12 m8 offset-m2">
+			<form action="" method="POST">
+			{% csrf_token %}
+			{{form|materializecss}}
+			<input type="submit" value="Login" class="btn">
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}

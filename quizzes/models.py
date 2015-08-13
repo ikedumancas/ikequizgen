@@ -1,7 +1,9 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password, make_password
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
+
+from helpers.models import SortableModel
 
 # Create your models here.
 class QuizManager(models.Manager):
@@ -58,7 +60,7 @@ class Quiz(models.Model):
 
 
 
-class Question(models.Model):
+class Question(SortableModel):
 	QUESTION_TYPE_CHOICES = (
 		('fb', 'Fill in the Blank'),
 		('tf', 'True or False'),
@@ -71,10 +73,6 @@ class Question(models.Model):
 									default='fb',
 									choices=QUESTION_TYPE_CHOICES)
 	answer_text = models.TextField()
-
-	class Meta:
-		verbose_name = "Question"
-		verbose_name_plural = "Questions"
 
 	def __unicode__(self):
 		return self.question_text
@@ -98,10 +96,11 @@ def question_post_save_receiver(sender, instance, *args, **kwargs):
 	instance.quiz.save()
     
 post_save.connect(question_post_save_receiver, sender=Question)
+pre_save.connect(Question.pre_save, sender=Question)
 
 
 
-class Choice(models.Model):
+class Choice(SortableModel):
 	question = models.ForeignKey(Question)
 	choice_text = models.TextField()
 	is_correct = models.BooleanField(default=False)
@@ -117,6 +116,7 @@ def choice_post_save_receiver(sender, instance, *args, **kwargs):
 	instance.question.quiz.save()
     
 post_save.connect(choice_post_save_receiver, sender=Choice)
+pre_save.connect(Choice.pre_save, sender=Choice)
 
 
 

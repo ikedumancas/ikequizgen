@@ -5,18 +5,28 @@
 		<ul class="right hide-on-med-and-down">
 			{% if request.user.is_authenticated %}
 			<li><a href="{% url 'quizzes:dashboard' %}" title="Dashboard"><i class="material-icons">dashboard</i></a></li>
-			<li><a href="#" title="Logout"><i class="material-icons">exit_to_app</i></a></li>
+			<li><a href="#" class="dropdown-button" data-activates='user_action'><img class="responsive-img user user-icon" src=""> {{user.username}}<i class="material-icons right">arrow_drop_down</i></a></li>
 			{% else %}
-			<li><a href="#">Login</a></li>
+			<li><a href="{% url 'register' %}">Register</a></li>
+			<li><a href="{% url 'login' %}">Login</a></li>
 			{% endif %}
 		</ul>
 		<ul class="side-nav" id="mobile-demo">
 			{% if request.user.is_authenticated %}
 			<li><a href="#" title="Logout"><span class="tiny material-icons">dashboard</span> Dashboard</a></li>
-			<li><a href="#" title="Logout"><span class="tiny material-icons">exit_to_app</span> Logout</a></li>
+			li><a href="#!">Edit Profile</a></li>
+			<li><a href="#!">Change Password</a></li>
+			<li class="divider"></li>
+			<li><a href="#!">Logout</a></li>
 			{% else %}
-			<li><a href="#">Login</a></li>
+			<li><a href="{% url 'login' %}">Login</a></li>
 			{% endif %}
 		</ul>
 	</div>
 </nav>
+<ul id="user_action" class="dropdown-content">
+	<li><a href="#!">Edit Profile</a></li>
+	<li><a href="#!">Change Password</a></li>
+	<li class="divider"></li>
+	<li><a href="{% url 'logout' %}">Logout</a></li>
+</ul>
